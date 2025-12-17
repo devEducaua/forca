@@ -9,7 +9,7 @@ const wordList = [
     "carro","caminhao","bicicleta","moto","aviao","trem","navio","barco","onibus","metro", "marimbondo",
     "rua","estrada","ponte","tunel","cidade","vila","bairro","pais","capital","estado", "molibdenio", "olheiro",
     "casa","apartamento","predio","escritorio","escola","universidade","biblioteca","museu","hospital","mercado",
-    "computador","teclado","mouse","tela","celular","tablet","camera","alto-falante","microfone","impressora",
+    "computador","teclado","mouse","tela","celular","tablet","camera","altofalante","microfone","impressora",
     "livro","papel","caneta","lapis","caderno","pasta","documento","carta","mensagem","email", "jaguara",
     "sol","lua","estrela","ceu","mar","rio","montanha","floresta","chuva","vento", "guri", "gaucho"
 ]
