@@ -24,7 +24,7 @@ async function getRandomWord() {
 function parseWord(word) {
     let parsedWord = "";
     const blockedLetters = new Map([
-        ["á", "a"], ["é", "e"], ["í", "i"], ["ó", "o"], ["ú", "u"], ["ç", "c"]
+        ["á", "a"], ["é", "e"], ["í", "i"], ["ó", "o"], ["ú", "u"], ["ã", "a"], ["õ", "o"], ["ç", "c"]
     ]);
 
     for (let i = 0; i < word.length; i++) {
