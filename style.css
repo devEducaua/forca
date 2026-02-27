@@ -78,6 +78,7 @@ main {
 
 #attempts {
     border: 2px solid var(--fg);
+    padding: 10px 10px;
     border-radius: 4px;
     width: 70px;
     height: 70px;
@@ -93,6 +94,7 @@ main {
 
 #word {
     font-size: 6em;
+    letter-spacing: 10px;
 }
 
 #keyboard {
