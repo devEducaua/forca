@@ -1,0 +1,64 @@
+:root {
+    --bg: #ebe7c3;
+    --fg: #333333;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: monospace;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#attempts {
+    font-size: 3rem;
+}
+
+#keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.key {
+    color: var(--fg);
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    background-color: var(--bg);
+    border: 2px solid var(--fg);
+}
+
+.key.used {
+    border: none;
+    opacity: 0.4;
+}
+
+#wordlist {
+    display: flex;
+    font-size: 4rem;
+    margin: 20px;
+}
+
+.letter {
+    margin: 10px;
+}
