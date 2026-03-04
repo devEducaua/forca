@@ -1,3 +1,1 @@
-
-- [ ] handle key variants
 - [ ] themes

@@ -38,8 +38,36 @@ let WORD = [];
 let REVEALEDWORD = [];
 let attempts = 6;
 
+const parseWord = (word) => {
+    let newWord = "";
+    for (let i = 0; i < word.length; i++) {
+        // TODO: possible format to a switch-case statement
+        let char = word[i];
+
+        if (word[i] == "á" || word[i] == "à" || word[i] == "ã") char = "a";
+        if (word[i] == "ó" || word[i] == "õ") char = "o";
+        if (word[i] == "é" ) char = "e";
+        if (word[i] == "í" ) char = "i";
+        if (word[i] == "ú" ) char = "u";
+        if (word[i] == "ç") char = "c";
+
+        newWord += char;
+    }
+    return newWord;
+}
+
 WORD = getWord();
-REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
+
+const makeRevealedWord = () => {
+    const arr = [];
+    for (let i = 0; i < WORD.length; i++) {
+        if (WORD[i] == " ") arr.push("-");
+        else arr.push("_");
+    }
+    return arr;
+}
+
+REVEALEDWORD = makeRevealedWord()
 
 const resetGame = () => {
     attempts = 6;
@@ -47,15 +75,14 @@ const resetGame = () => {
     keys.forEach((k) => k.classList.remove("used"));
     wordlist.innerHTML = "";
     WORD = getWord();
-    REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
-    putWord(WORD);
+    REVEALEDWORD = makeRevealedWord();
+    putWord(REVEALEDWORD);
 }
 newGame.addEventListener("click", resetGame);
 
 editForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // TODO: add verifications to the input.value
     if (inputForm.value.trim() == "") return;
 
     attempts = 6;
@@ -63,9 +90,12 @@ editForm.addEventListener("submit", (e) => {
     keys.forEach((k) => k.classList.remove("used"));
     wordlist.innerHTML = "";
 
-    WORD = inputForm.value.toLowerCase().split("");
-    REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
-    putWord(WORD);
+    let parsed = parseWord(inputForm.value);
+    console.log(parsed);
+
+    WORD = parsed.toLowerCase().split("");
+    REVEALEDWORD = makeRevealedWord()
+    putWord(REVEALEDWORD);
 
     inputForm.value = "";
     modal.close();
@@ -77,12 +107,14 @@ const putWord = (word) => {
     for (let i = 0; i < len; i++) {
         const e = document.createElement("p");
         wordlist.appendChild(e);
+
         e.classList.add("letter");
-        e.textContent="_";
+
+        e.textContent=word[i];
     }
 }
 
-putWord(WORD);
+putWord(REVEALEDWORD);
 
 const updateWord = (newWord) => {
     const len = newWord.length;
@@ -95,8 +127,10 @@ const updateWord = (newWord) => {
 
 const revealLetter = (letter) => {
     for (let i = 0; i < WORD.length; i++) {
-        if (WORD[i] == letter) {
-            REVEALEDWORD[i] = letter;
+        if (WORD[i] != " ") {
+            if (WORD[i] == letter) {
+                REVEALEDWORD[i] = letter;
+            }
         }
     }
 
