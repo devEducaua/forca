@@ -50,6 +50,8 @@ main {
     display: flex;
     font-size: 6rem;
     margin: 50px 0 50px 0;
+    max-width: 1500px;
+    flex-wrap: wrap;
 }
 
 .letter {
