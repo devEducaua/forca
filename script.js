@@ -1,56 +1,75 @@
+
 const attemptsIndicator = document.getElementById("attempts");
 const keys = document.querySelectorAll(".key");
 const newGame = document.getElementById("newgame");
 const wordlist = document.getElementById("wordlist");
+const editBtn = document.getElementById("edit-btn");
+const modal = document.getElementById("edit-modal");
+const inputForm = document.getElementById("edit-input");
+const editForm = document.getElementById("edit-form");
+const closeModalBtn = document.getElementById("close-modal");
+
+editBtn.addEventListener("click", () => modal.showModal());
+closeModalBtn.addEventListener("click", () => modal.close());
+modal.close();
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms)); 
 
-const getWord = async (method) => {
+const getWord = () => {
     let word = "";
 
-    if (method == "dict") {
-        const url = "https://api.dicionario-aberto.net/random";
-        const resp = await fetch(url);
-        const result = await resp.json();
-        word = result.word;
-    }
+    const words = [
+        "maca","banana","laranja","uva","melancia","melao","pessego","pera","ameixa","cereja",
+        "manga","limao","lima","abacaxi","coco","kiwi","morango","framboesa","amora","mirtilo",
+        "carro","caminhao","bicicleta","moto","aviao","trem","navio","barco","onibus","metro", "marimbondo",
+        "rua","estrada","ponte","tunel","cidade","vila","bairro","pais","capital","estado", "molibdenio", "olheiro",
+        "casa","apartamento","predio","escritorio","escola","universidade","biblioteca","museu","hospital","mercado",
+        "computador","teclado","mouse","tela","celular","tablet","camera","altofalante","microfone","impressora",
+        "livro","papel","caneta","lapis","caderno","pasta","documento","carta","mensagem","email", "jaguara",
+        "sol","lua","estrela","ceu","mar","rio","montanha","floresta","chuva","vento", "guri", "gaucho"
+    ];
 
-    else if (method == "arr") {
-        const words = [
-            "maca","banana","laranja","uva","melancia","melao","pessego","pera","ameixa","cereja",
-            "manga","limao","lima","abacaxi","coco","kiwi","morango","framboesa","amora","mirtilo",
-            "carro","caminhao","bicicleta","moto","aviao","trem","navio","barco","onibus","metro", "marimbondo",
-            "rua","estrada","ponte","tunel","cidade","vila","bairro","pais","capital","estado", "molibdenio", "olheiro",
-            "casa","apartamento","predio","escritorio","escola","universidade","biblioteca","museu","hospital","mercado",
-            "computador","teclado","mouse","tela","celular","tablet","camera","altofalante","microfone","impressora",
-            "livro","papel","caneta","lapis","caderno","pasta","documento","carta","mensagem","email", "jaguara",
-            "sol","lua","estrela","ceu","mar","rio","montanha","floresta","chuva","vento", "guri", "gaucho"
-        ];
+    word = words[Math.floor(Math.random() * words.length)];
 
-        word = words[Math.floor(Math.random() * words.length)];
-
-    }
     return word.split("");
 } 
 
-const METHOD = "arr";
 let WORD = [];
 let REVEALEDWORD = [];
 let attempts = 6;
 
-WORD = await getWord(METHOD);
+WORD = getWord();
 REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
 
-const resetGame = async () => {
+const resetGame = () => {
     attempts = 6;
     attemptsIndicator.textContent = attempts;
     keys.forEach((k) => k.classList.remove("used"));
     wordlist.innerHTML = "";
-    WORD = await getWord(METHOD);
+    WORD = getWord();
     REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
     putWord(WORD);
 }
 newGame.addEventListener("click", resetGame);
+
+editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // TODO: add verifications to the input.value
+    if (inputForm.value.trim() == "") return;
+
+    attempts = 6;
+    attemptsIndicator.textContent = attempts;
+    keys.forEach((k) => k.classList.remove("used"));
+    wordlist.innerHTML = "";
+
+    WORD = inputForm.value.toLowerCase().split("");
+    REVEALEDWORD = Array.from({ length: WORD.length }).fill("_");
+    putWord(WORD);
+
+    inputForm.value = "";
+    modal.close();
+})
 
 const putWord = (word) => {
     const len = word.length;
@@ -103,6 +122,7 @@ const handleClick = (e) => {
     k.classList.add("used");
 
     revealLetter(k.textContent);
+    if (attempts == 0) return;
     updateWord(REVEALEDWORD);
 }
 
@@ -111,6 +131,7 @@ keys.forEach((k) => {
 })
 
 document.addEventListener("keydown", (e) => {
+    if (modal.open) return;
     const key = e.key.toLowerCase();
  
     keys.forEach((k) => {

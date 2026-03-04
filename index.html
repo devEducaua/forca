@@ -8,14 +8,28 @@
 </head>
 <body>
     <header>
-        <a href="https://github.com/deveducaua/forca" target="_blank">source</a>
+        <button><a href="https://github.com/deveducaua/forca" target="_blank">source</a></button>
+        <button id="edit-btn">edit</button>
     </header>
+
+
 
     <main>
         <p id="attempts">6</p>
 
         <div id="wordlist">
         </div>
+
+        <dialog id="edit-modal">
+            <form id="edit-form">
+                <p>type here a word to play:</p>
+                <input id="edit-input" type="text" placeholder="word">
+                <div id="buttons">
+                    <button type="button" id="close-modal">close</button>
+                    <button type="submit">send</button>
+                </div>
+            </form>
+        </dialog>
 
         <div id="keyboard">
             <div id="first-line">
@@ -55,7 +69,7 @@
         <button id="newgame">new game</button>
     </main>
 
-    <script type="module" src="script.js"></script>
+    <script type="module" src="script.js" defer></script>
 </body>
 </html>
 

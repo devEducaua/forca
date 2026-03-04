@@ -23,6 +23,17 @@ header {
     padding: 1rem;
 }
 
+header button {
+    background: none;
+    border: none;
+    margin: 5px 50px;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 main {
     flex: 1;
     display: flex;
@@ -87,8 +98,44 @@ main {
         opacity: 0.7;
     }
 }
+#edit-modal[open] {
+    display: flex;
+}
+
+#edit-modal {
+    padding: 20px;
+    margin: auto;
+    border: 2px solid var(--fg);
+    background-color: var(--bg);
+    color: var(--fg);
+    font-size: 2rem;
+}
+
+#edit-modal input {
+    width: 400px;
+    font-size: 2rem;
+    margin: 30px 0 10px 0;
+    padding: 10px;
+    background: none;
+    outline: none;
+    border: 2px solid var(--fg);
+}
+
+#edit-modal button {
+    background: none;
+    border: 2px solid var(--fg);
+    padding: 10px 20px;
+    margin-left: 10px;
+}
+
+#edit-modal #buttons {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
 
 a {
     color: var(--fg);
+    text-decoration: none;
 }
 
