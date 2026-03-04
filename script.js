@@ -13,8 +13,6 @@ editBtn.addEventListener("click", () => modal.showModal());
 closeModalBtn.addEventListener("click", () => modal.close());
 modal.close();
 
-const sleep = (ms) => new Promise(r => setTimeout(r, ms)); 
-
 const getWord = () => {
     let word = "";
 
@@ -41,16 +39,33 @@ let attempts = 6;
 const parseWord = (word) => {
     let newWord = "";
     for (let i = 0; i < word.length; i++) {
-        // TODO: possible format to a switch-case statement
         let char = word[i];
 
-        if (word[i] == "á" || word[i] == "à" || word[i] == "ã") char = "a";
-        if (word[i] == "ó" || word[i] == "õ") char = "o";
-        if (word[i] == "é" ) char = "e";
-        if (word[i] == "í" ) char = "i";
-        if (word[i] == "ú" ) char = "u";
-        if (word[i] == "ç") char = "c";
+        switch (word[i]) {
+            case "á":
+            case "à":
+            case "ã":
+                char = "a";
+                break;
 
+            case "ó":
+            case "õ":
+                char = "o";
+                break;
+
+            case "é":
+                char = "e";
+                break;
+            case "í":
+                char = "i";
+                break;
+            case "ú":
+                char = "u";
+                break;
+            case "ç":
+                char = "c";
+                break;
+        }
         newWord += char;
     }
     return newWord;
