@@ -15,7 +15,8 @@ modal.close();
 const state = {
     word: [],
     revealed: [],
-    attempts:  6
+    attempts:  6,
+    ends: false,
 }
 
 const getRandomWord = () => {
@@ -104,7 +105,6 @@ const setWordList = (newWord) => {
 }
 
 const revealLetter = (letter) => {
-    // do all of this in one loop
     let founded = false;
     for (let i = 0; i < state.word.length; i++) {
         if (state.word[i] != " ") {
@@ -119,9 +119,21 @@ const revealLetter = (letter) => {
         updateAttempts(state.attempts-1);
     }
 
-    if (state.attempts == 0) {
+    if (checkGameEnds()) {
         setWordList(state.word);
     }
+}
+
+const checkGameEnds = () => {
+    state.ends = false;
+
+    if (state.attempts <= 0) 
+        state.ends = true;
+
+    if (state.revealed.toString() == state.word.toString()) 
+        state.ends = true;
+
+    return state.ends;
 }
 
 const parseWord = (word) => {
@@ -169,11 +181,13 @@ const parseWord = (word) => {
 
 keys.forEach((k) => { 
     k.addEventListener("click", () => {
-        revealLetter(k.textContent);
-        if (state.attempts == 0) return;
+        if (checkGameEnds()) return;
 
         if (k.classList.contains("used")) return;
         k.classList.add("used");
+
+        revealLetter(k.textContent);
+        if (state.attempts == 0) return;
 
         setWordList(state.revealed);
     })
