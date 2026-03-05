@@ -1,1 +1,2 @@
-- [ ] themes
+- [ ] dark theme support
+- [ ] break words when the phrase is too long
