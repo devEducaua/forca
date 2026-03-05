@@ -1,7 +1,7 @@
 
 const attemptsIndicator = document.getElementById("attempts");
 const keys = document.querySelectorAll(".key");
-const newGame = document.getElementById("newgame");
+const newGameBtn = document.getElementById("newgame");
 const wordlist = document.getElementById("wordlist");
 const editBtn = document.getElementById("edit-btn");
 const modal = document.getElementById("edit-modal");
@@ -13,9 +13,14 @@ editBtn.addEventListener("click", () => modal.showModal());
 closeModalBtn.addEventListener("click", () => modal.close());
 modal.close();
 
-const getWord = () => {
-    let word = "";
+const state = {
+    word: [],
+    revealed: [],
+    attempts:  6
+}
 
+const getRandomWord = () => {
+    let word = "";
     const words = [
         "maca","banana","laranja","uva","melancia","melao","pessego","pera","ameixa","cereja",
         "manga","limao","lima","abacaxi","coco","kiwi","morango","framboesa","amora","mirtilo",
@@ -26,15 +31,98 @@ const getWord = () => {
         "livro","papel","caneta","lapis","caderno","pasta","documento","carta","mensagem","email", "jaguara",
         "sol","lua","estrela","ceu","mar","rio","montanha","floresta","chuva","vento", "guri", "gaucho"
     ];
-
     word = words[Math.floor(Math.random() * words.length)];
-
     return word.split("");
 } 
 
-let WORD = [];
-let REVEALEDWORD = [];
-let attempts = 6;
+state.word = getRandomWord();
+
+const makeRevealedWord = () => {
+    const arr = [];
+    for (let i = 0; i < state.word.length; i++) {
+        if (state.word[i] == " ") arr.push("-");
+        else arr.push("_");
+    }
+    return arr;
+}
+
+state.revealed = makeRevealedWord()
+
+const updateAttempts = (value) => {
+    state.attempts = value;
+    attemptsIndicator.textContent = state.attempts;
+}
+
+const newGame = (word) => {
+    updateAttempts(6);
+    keys.forEach((k) => k.classList.remove("used"));
+    wordlist.innerHTML = "";
+    state.revealed = makeRevealedWord();
+    createWordList(state.revealed);
+}
+
+newGameBtn.addEventListener("click", () => {
+    state.word = getRandomWord();
+    newGame();
+});
+
+editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (inputForm.value.trim() == "") return;
+
+
+    let parsed = parseWord(inputForm.value);
+    console.log(parsed);
+
+    state.word = parsed.toLowerCase().split("");
+
+    newGame();
+
+    inputForm.value = "";
+    modal.close();
+})
+
+const createWordList = (word) => {
+    const len = word.length;
+
+    for (let i = 0; i < len; i++) {
+        const e = document.createElement("p");
+        wordlist.appendChild(e);
+        e.classList.add("letter");
+        e.textContent=word[i];
+    }
+}
+
+createWordList(state.revealed);
+
+const setWordList = (newWord) => {
+    const len = newWord.length;
+
+    const children = wordlist.children;
+    for (let i = 0; i < len; i++) {
+        children[i].textContent=newWord[i]
+    }
+}
+
+const revealLetter = (letter) => {
+    // do all of this in one loop
+    for (let i = 0; i < state.word.length; i++) {
+        if (state.word[i] != " ") {
+            if (state.word[i] == letter) {
+                state.revealed[i] = letter;
+            }
+        }
+    }
+
+    if (!state.word.includes(letter) && state.attempts > 0) {
+        updateAttempts(state.attempts-1);
+    }
+
+    if (state.attempts == 0) {
+        setWordList(state.word);
+    }
+}
 
 const parseWord = (word) => {
     let newWord = "";
@@ -45,23 +133,31 @@ const parseWord = (word) => {
             case "á":
             case "à":
             case "ã":
+            case "â":
                 char = "a";
                 break;
 
             case "ó":
             case "õ":
+            case "ô":
                 char = "o";
                 break;
 
             case "é":
+            case "ê":
                 char = "e";
                 break;
+
             case "í":
+            case "î":
                 char = "i";
                 break;
+
             case "ú":
+            case "û":
                 char = "u";
                 break;
+
             case "ç":
                 char = "c";
                 break;
@@ -71,112 +167,16 @@ const parseWord = (word) => {
     return newWord;
 }
 
-WORD = getWord();
+keys.forEach((k) => { 
+    k.addEventListener("click", () => {
+        revealLetter(k.textContent);
+        if (state.attempts == 0) return;
 
-const makeRevealedWord = () => {
-    const arr = [];
-    for (let i = 0; i < WORD.length; i++) {
-        if (WORD[i] == " ") arr.push("-");
-        else arr.push("_");
-    }
-    return arr;
-}
+        if (k.classList.contains("used")) return;
+        k.classList.add("used");
 
-REVEALEDWORD = makeRevealedWord()
-
-const resetGame = () => {
-    attempts = 6;
-    attemptsIndicator.textContent = attempts;
-    keys.forEach((k) => k.classList.remove("used"));
-    wordlist.innerHTML = "";
-    WORD = getWord();
-    REVEALEDWORD = makeRevealedWord();
-    putWord(REVEALEDWORD);
-}
-newGame.addEventListener("click", resetGame);
-
-editForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    if (inputForm.value.trim() == "") return;
-
-    attempts = 6;
-    attemptsIndicator.textContent = attempts;
-    keys.forEach((k) => k.classList.remove("used"));
-    wordlist.innerHTML = "";
-
-    let parsed = parseWord(inputForm.value);
-    console.log(parsed);
-
-    WORD = parsed.toLowerCase().split("");
-    REVEALEDWORD = makeRevealedWord()
-    putWord(REVEALEDWORD);
-
-    inputForm.value = "";
-    modal.close();
-})
-
-const putWord = (word) => {
-    const len = word.length;
-
-    for (let i = 0; i < len; i++) {
-        const e = document.createElement("p");
-        wordlist.appendChild(e);
-
-        e.classList.add("letter");
-
-        e.textContent=word[i];
-    }
-}
-
-putWord(REVEALEDWORD);
-
-const updateWord = (newWord) => {
-    const len = newWord.length;
-
-    const children = wordlist.children;
-    for (let i = 0; i < len; i++) {
-        children[i].textContent=newWord[i]
-    }
-}
-
-const revealLetter = (letter) => {
-    for (let i = 0; i < WORD.length; i++) {
-        if (WORD[i] != " ") {
-            if (WORD[i] == letter) {
-                REVEALEDWORD[i] = letter;
-            }
-        }
-    }
-
-    if (!WORD.includes(letter) && attempts > 0) {
-        attempts--;
-        attemptsIndicator.textContent = attempts;
-    }
-
-    if (attempts == 0) {
-        revealWord();
-    }
-}
-
-const revealWord = () => {
-    updateWord(WORD);
-}
-
-const handleClick = (e) => { 
-    if (attempts == 0) return;
-    const k = e.target;
-
-    if (k.classList.contains("used")) return;
-    k.classList.add("used");
-
-    revealLetter(k.textContent);
-    if (attempts == 0) return;
-    updateWord(REVEALEDWORD);
-}
-
-keys.forEach((k) => {
-    k.addEventListener("click", handleClick);
+        setWordList(state.revealed);
+    })
 })
 
 document.addEventListener("keydown", (e) => {
