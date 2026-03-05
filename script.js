@@ -1,4 +1,3 @@
-
 const attemptsIndicator = document.getElementById("attempts");
 const keys = document.querySelectorAll(".key");
 const newGameBtn = document.getElementById("newgame");
@@ -53,7 +52,7 @@ const updateAttempts = (value) => {
     attemptsIndicator.textContent = state.attempts;
 }
 
-const newGame = (word) => {
+const newGame = () => {
     updateAttempts(6);
     keys.forEach((k) => k.classList.remove("used"));
     wordlist.innerHTML = "";
@@ -70,7 +69,6 @@ editForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
     if (inputForm.value.trim() == "") return;
-
 
     let parsed = parseWord(inputForm.value);
     console.log(parsed);
@@ -107,15 +105,17 @@ const setWordList = (newWord) => {
 
 const revealLetter = (letter) => {
     // do all of this in one loop
+    let founded = false;
     for (let i = 0; i < state.word.length; i++) {
         if (state.word[i] != " ") {
             if (state.word[i] == letter) {
+                founded = true;
                 state.revealed[i] = letter;
             }
         }
     }
 
-    if (!state.word.includes(letter) && state.attempts > 0) {
+    if (!founded && state.attempts > 0) {
         updateAttempts(state.attempts-1);
     }
 
